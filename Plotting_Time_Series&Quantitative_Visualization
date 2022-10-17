@@ -1,0 +1,128 @@
+#To avoid having different scale in plotting data
+fig,ax = plt.subplots()
+
+ax.plot(climate_change.index,climate_change["co2"],color='blue')
+ax.set_xlabel('Time')
+ax.set_ylabel('CO2 (ppm)',color='blue')
+ax.tick_params('y',color='blue') #coloring the ticks to distinguish different scale of variables
+
+ax2 = ax.twinx()
+ax2.plot(climate_change.index,climate_change["relative_temp"],color='red')
+ax2.set_ylabel('Relative temperature (Celsius)',color='red')
+ax.tick_params('y',color='red')
+
+plt.show()
+
+#we can also modify the above codes into function:
+def plot_timeseries(axes, x, y, color, xlabel, ylabel):
+  axes.plot(x,y,color=color)
+  axes.set_xlabel(xlabel)
+  axes.set_ylabel(ylabel,color=color)
+  axes.tick_params('y',colors=color)
+  
+#now, we don't have to repeat our codes:
+fig,ax = plt.subplots()
+plot_timeseries(ax,climate_change.index, climate_change['co2'],'blue',"Time (years)",'CO2 (ppm)')
+
+ax2 = ax.twinx()
+plot_timeseries(ax2,climate_change.index, climate_change["relative_temp"],'red',"Time (years)",'Relative temperature (Celsius)')
+
+#annotating time-series data
+
+#add arrows to annotation for specific point of data
+ax2.annotate(">1 degree", xy=(pd.Timestamp('2015-10-06'),1), #this defines x-y value
+              xytext = (pd.Timestamp('2008-10-06'),-0.2), #this place the text in axis
+              arrowprops={"arrowstyle":"->","color":"gray"} #this designs the arrows)
+              
+#quantitative comparisons: bar-charts
+
+#olympic medals: visualizing the data
+medals = pd.read_csv('medals_by_country_2016.csv',index_col=0)
+fig, ax = plt.subplots()
+ax.bar(medals.index,medals["Gold"])
+plt.show()
+
+#rotate the x-axis if the name of x-value is too long 
+fig.ax = plt.subplots()
+ax.bar(medals.index,medals["Gold"])
+ax.set_xticklabels(medals.index,rotation=90)
+ax.set_ylabel("Number of medals")
+plt.show()
+
+#visualize multiple things
+fig,ax = plt.subplots
+
+ax.bar(medals.index,medals["Gold"],label="Gold")
+
+ax.bar(medals.index,medals["Silver"],bottom=medals["Gold"],label="Silver")
+
+ax.bar(medals.index,medals["Bronze"],bottom=medals["Gold"]+medals["Silver"],label="Bronze")
+
+ax.set_xticklabels(medals.index,rotation=90)
+ax.set_ylabel("Number of medals")
+ax.legend()
+plt.show()
+
+#quantitative comparisons: histograms
+fig,ax=plt.subplots()
+ax.hist(mens_rowing["Height"],label="Rowing",bins=[150,160,170,180,190,200,210],histtype="step")
+ax.hist(mens_gymnastic["Height"],label="Gymnastic,bins=[150,160,170,180,190,200,210],histtype="step")
+ax.set_xlabel("Height (cm)")
+ax.set_ylabel("# of observations")
+ax.legend()
+plt.show()
+
+#statistical plotting
+fig,ax=plt.subplots()
+
+ax.bar("Rowing",mens_rowing["Height"].mean(),yerr=mens_rowing["Height"].std())
+
+ax.bar("Gymnastics",mens_gymnastic["Height"].mean(),yerr=mens_gymnastic["Height"].std())
+
+ax.set_ylabel("Height (cm)")
+plt.show()
+
+#adding boxplots
+fig.ax=plt.subplots()
+
+ax.boxplot([mens_rowing["Height"],mens_gymnastic["Height"]])
+
+ax.set_xticklabels(["Rowing","Gymnastics"])
+ax.set_ylabel("Height (cm)")
+plt.show()
+
+#quantitative comparisons: scatter plots
+#customize the scatter plots which distinguishes between 2 groups
+eighties = climate_change["1980-01-01":"1989-12-31"]
+nineties = climate_change["1990-01-01":"1999-12-31"]
+
+fig,ax = plt.subplots()
+#to identify 2 kinds of scatter plots on the graph 
+ax.scatter(eighties["co2"],eighties["relevant_temp"],color="red",label="eighties")
+ax.scatter(nineties["co2"],nineties["relevant_temp"],color="blue",label="nineties")
+
+#when you try to use 3 variables [without specifying the variables]:
+ax.scatter(climate_change["co2"],climate_change["relevant_temp"],c=climate_change.index)
+
+ax.legend()
+
+ax.set_xlabel("CO2 (ppm)")
+ax.set_ylabel("Relative temperature (Celsius)")
+
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
